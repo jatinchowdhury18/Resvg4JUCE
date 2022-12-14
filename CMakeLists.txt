@@ -15,7 +15,7 @@ project (RESVG4JUCE VERSION 0.2.0)
 # Some CMake exporters (e.g. ninja) need a dummy library file to be present before the 
 # build target referencing this file and triggering the prior build has been executed.
 # Therefore we create a dummy library output file here first
-set (RESVG_LIB_OUTPUT_DIR ${CMAKE_CURRENT_LIST_DIR}/Ext/resvg/target/release)
+set (RESVG_LIB_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/target/release)
 
 if (WIN32)
     set (RESVG_LIB_OUTPUT ${RESVG_LIB_OUTPUT_DIR}/resvg.lib)
@@ -32,11 +32,11 @@ file (TOUCH ${RESVG_LIB_OUTPUT})
 if (APPLE)
     add_custom_target (resvg_cargo_build_arm64
             WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/Ext/resvg/c-api
-            COMMAND ${CMAKE_COMMAND} -E env MACOSX_DEPLOYMENT_TARGET=10.7 cargo build --release --target aarch64-apple-darwin)
+            COMMAND ${CMAKE_COMMAND} -E env MACOSX_DEPLOYMENT_TARGET=10.7 CARGO_TARGET_DIR=${CMAKE_CURRENT_BINARY_DIR}/target cargo build --release --target aarch64-apple-darwin)
 
     add_custom_target (resvg_cargo_build_x86_64
             WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/Ext/resvg/c-api
-            COMMAND ${CMAKE_COMMAND} -E env MACOSX_DEPLOYMENT_TARGET=10.7 cargo build --release --target x86_64-apple-darwin)
+            COMMAND ${CMAKE_COMMAND} -E env MACOSX_DEPLOYMENT_TARGET=10.7 CARGO_TARGET_DIR=${CMAKE_CURRENT_BINARY_DIR}/target cargo build --release --target x86_64-apple-darwin)
 
     add_custom_target (resvg_cargo_build
             WORKING_DIRECTORY ${RESVG_LIB_OUTPUT_DIR}
@@ -46,7 +46,7 @@ if (APPLE)
 else()
      add_custom_target (resvg_cargo_build
             WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/Ext/resvg/c-api
-            COMMAND cargo build --release)
+            COMMAND ${CMAKE_COMMAND} -E env CARGO_TARGET_DIR=${CMAKE_CURRENT_BINARY_DIR}/target cargo build --release)
 endif()
 
 # Make an imported targe that references the library just built
