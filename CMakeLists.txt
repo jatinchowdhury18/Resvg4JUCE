@@ -43,7 +43,20 @@ if (APPLE)
             COMMAND lipo -create -output libresvg.a ../aarch64-apple-darwin/release/libresvg.a ../x86_64-apple-darwin/release/libresvg.a)
 
     add_dependencies (resvg_cargo_build resvg_cargo_build_arm64 resvg_cargo_build_x86_64)
-else()
+elseif(MSVC)
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        # 64 bits
+        set(RESVG_ARCH x86_64-pc-windows-msvc)
+    elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+        # 32 bits
+        set(RESVG_ARCH i686-pc-windows-msvc)
+    endif()
+    message(STATUS "Building Resvg for MSVC with arch ${RESVG_ARCH}")
+    add_custom_target (resvg_cargo_build
+            WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/Ext/resvg/c-api
+            COMMAND ${CMAKE_COMMAND} -E env CARGO_TARGET_DIR=${CMAKE_CURRENT_BINARY_DIR}/target cargo build --target ${RESVG_ARCH} --release
+            COMMAND cp ${CMAKE_CURRENT_BINARY_DIR}/target/${RESVG_ARCH}/release/resvg.lib ${CMAKE_CURRENT_BINARY_DIR}/target/release/resvg.lib)
+else() # Probably Linux
      add_custom_target (resvg_cargo_build
             WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/Ext/resvg/c-api
             COMMAND ${CMAKE_COMMAND} -E env CARGO_TARGET_DIR=${CMAKE_CURRENT_BINARY_DIR}/target cargo build --release)
