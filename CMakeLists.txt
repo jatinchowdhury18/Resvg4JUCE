@@ -55,7 +55,7 @@ elseif(MSVC)
     add_custom_target (resvg_cargo_build
             WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/Ext/resvg/c-api
             COMMAND ${CMAKE_COMMAND} -E env CARGO_TARGET_DIR=${CMAKE_CURRENT_BINARY_DIR}/target cargo build --target ${RESVG_ARCH} --release
-            COMMAND cp ${CMAKE_CURRENT_BINARY_DIR}/target/${RESVG_ARCH}/release/resvg.lib ${CMAKE_CURRENT_BINARY_DIR}/target/release/resvg.lib)
+            COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/target/${RESVG_ARCH}/release/resvg.lib ${CMAKE_CURRENT_BINARY_DIR}/target/release/resvg.lib)
 else() # Probably Linux
      add_custom_target (resvg_cargo_build
             WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/Ext/resvg/c-api
