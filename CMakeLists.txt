@@ -70,7 +70,7 @@ target_include_directories (resvg INTERFACE ${CMAKE_CURRENT_LIST_DIR}/Ext/resvg/
 
 # Seems like bcrypt is a dependency on Windows
 if (WIN32)
-    target_link_libraries (resvg INTERFACE bcrypt)
+    target_link_libraries (resvg INTERFACE bcrypt userenv)
 endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
